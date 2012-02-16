@@ -12,9 +12,9 @@ var am = require('../action-manager');
 exports['load-actions'] = function(test) {
     // One component case
     var myGE = new am.ActionManager(),
-        res = myGE.loadActions('tests/modules');
+        unitActions = require('./modules/unit/actions.js');
 
-    test.ok(res);
+    myGE.addActions('unit', unitActions.actions);
 
     test.ok(myGE.actions);
     test.ok(myGE.actions.unit);
@@ -30,7 +30,7 @@ exports['load-actions'] = function(test) {
 exports['use-actions'] = function(test) {
     // One component case
     var myGE = new am.ActionManager(),
-        res = myGE.loadActions('tests/modules'),
+        unitActions = require('./modules/unit/actions.js'),
 
         unit1 = {
             "position": 1,
@@ -65,6 +65,8 @@ exports['use-actions'] = function(test) {
         cell = {
             "position": 2
         };
+
+    myGE.addActions('unit', unitActions.actions);
 
     //.........................................................................
     // Testing the move action

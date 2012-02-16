@@ -22,19 +22,6 @@ var fs = require('fs'),
      */
     function ActionManager() {
 
-        //---------------------------------------------------------------------
-        // is this really needed?
-        //---------------------------------------------------------------------
-        /**
-         * Function for getting an object from an ID. This function should be
-         * overwritten in a subclass.
-         */
-        this.get = function(ID) {
-            // This method is to be overwritten
-            return null;
-        };
-        //---------------------------------------------------------------------
-
         /**
          * List of all the available actions (in their modules).
          *
@@ -49,7 +36,7 @@ var fs = require('fs'),
          * Add a list of actions from a module to the current dictionary of
          * actions. Use the module name as a namespace for all actions.
          */
-        var addActions = function(module, actions) {
+        this.addActions = function(module, actions) {
             if (typeof actions == "undefined" || actions === null || actions.length == 0) {
                 util.log("No action to add for module '" + module + "'");
                 return false;
@@ -85,28 +72,6 @@ var fs = require('fs'),
 
                 namespace[a] = action;
             }
-        };
-
-        /**
-         * Load all actions inside a directory of modules.
-         */
-        this.loadActions = function(pathToModules) {
-            pathToModules = path.normalize(pathToModules);
-            if (!path.existsSync(pathToModules)) {
-                util.log("The modules directory '" + pathToModules + "' doesn't exist");
-                return false;
-            }
-
-            modules = fs.readdirSync(pathToModules);
-            for (m in modules) {
-                var actionsFilePath = path.join(pathToModules, modules[m], 'actions.js');
-                if (path.existsSync(actionsFilePath)) {
-                    var actionsFile = require('./' + actionsFilePath); // Sad hack...
-                    addActions(modules[m], actionsFile.actions);
-                }
-            }
-
-            return true;
         };
     }
 
