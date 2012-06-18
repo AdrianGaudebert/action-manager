@@ -45,24 +45,27 @@ var fs = require('fs'),
             // Create the module
             var namespace = actionsList[module] = {};
 
-            for (a in actions) {
+            for (var a in actions) {
                 // Create an action object that has all properties and is callable
                 var Action = function() {};
                 Action.prototype = Function.prototype;
 
-                var act = new Action();
+                var act = new Action(),
+                    action;
                 act.check = actions[a].check;
                 act.execute = actions[a].execute;
                 act.actionName = a;
                 act.module = module;
 
-                var action = function() {
-                    if (act.check.apply(act, arguments)) {
-                        act.execute.apply(act, arguments);
-                        return true;
-                    }
-                    return false;
-                };
+                (function(act) {
+                    action = function() {
+                        if (act.check.apply(act, arguments)) {
+                            act.execute.apply(act, arguments);
+                            return true;
+                        }
+                        return false;
+                    };
+                })(act);
                 action.__proto__ = act;
 
                 // Now action can be used in those ways:

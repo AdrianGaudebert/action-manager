@@ -90,3 +90,56 @@ exports['use-actions'] = function(test) {
 
     test.done();
 }
+
+exports['several-actions'] = function(test) {
+    // One component case
+    var myGE = new am.ActionManager(),
+        unitActions = require('./modules/unit/actions.js'),
+
+        unit1 = {
+            "position": 1,
+            "life": 100,
+            "attack": 10,
+            "defense": 5,
+            "canMove": function() {
+                return true;
+            },
+            "canReach": function(unit) {
+                return true;
+            },
+            "canGoTo": function(dest) {
+                return true;
+            }
+        },
+        unit2 = {
+            "position": 3,
+            "life": 90,
+            "attack": 20,
+            "defense": 15,
+            "canMove": function(unit) {
+                return false;
+            },
+            "canReach": function(unit) {
+                return false;
+            },
+            "canGoTo": function(dest) {
+                return false;
+            }
+        },
+        cell = {
+            "position": 2
+        };
+
+    myGE.addActions('unit', unitActions.actions);
+
+    myGE.actions.unit.attack(unit1, unit2);
+
+    test.equal(unit1.life, 100);
+    test.equal(unit2.life, 80);
+
+    myGE.actions.unit.move(unit1, cell);
+
+    test.equal(unit1.position, cell.position);
+
+    test.done();
+}
