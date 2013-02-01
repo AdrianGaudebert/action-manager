@@ -6,10 +6,6 @@
  *
  */
 
-var fs = require('fs'),
-    path = require('path'),
-    util = require('util');
-
 (function(exports) {
 
     /**
@@ -38,7 +34,6 @@ var fs = require('fs'),
          */
         this.addActions = function(module, actions) {
             if (typeof actions == "undefined" || actions === null || actions.length == 0) {
-                util.log("No action to add for module '" + module + "'");
                 return false;
             }
 
