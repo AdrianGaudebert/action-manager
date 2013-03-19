@@ -1,19 +1,23 @@
 /**
  * ActionManager JavaScript Library v0.1
  *
- * Copyright 2012, Adrian Gaudebert
- * Licensed under the MIT license.
+ * @author Adrian Gaudebert - adrian@gaudebert.fr
+ * @license MIT
  *
  */
 
-(function(exports) {
+// for compatibility with node.js and require.js
+if (typeof define !== 'function') {
+    var define = require('amdefine')(module)
+}
+
+define(function () {
 
     /**
      * Class ActionManager
      *
      * Handle actions.
      *
-     * @author Adrian Gaudebert - adrian@gaudebert.fr
      * @constructor
      */
     function ActionManager() {
@@ -73,6 +77,8 @@
         };
     }
 
-    exports.ActionManager = ActionManager;
+    return {
+        'ActionManager': ActionManager
+    };
 
-})(typeof exports === 'undefined' ? this['exports'] = {} : exports);
+});
