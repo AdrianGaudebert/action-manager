@@ -36,7 +36,7 @@ define(function () {
          * Add a list of actions from a module to the current dictionary of
          * actions. Use the module name as a namespace for all actions.
          */
-        this.addActions = function(module, actions) {
+        this.addActions = function(module, actions, executeFn) {
             if (typeof actions == "undefined" || actions === null || actions.length == 0) {
                 return false;
             }
@@ -59,7 +59,12 @@ define(function () {
                 (function(act) {
                     action = function() {
                         if (act.check.apply(act, arguments)) {
-                            act.execute.apply(act, arguments);
+                            if (executeFn) {
+                                executeFn.apply(act, arguments);
+                            }
+                            else {
+                                act.execute.apply(act, arguments);
+                            }
                             return true;
                         }
                         return false;

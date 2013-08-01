@@ -1,13 +1,54 @@
 /**
  * Test cases for ActionManager class.
  *
- * Requires node.js and it's nodeunit module.
+ * Requires node.js and its nodeunit module.
  * To run those tests: nodeunit tests/test_action-manager.js
  *
  * @author Adrian Gaudebert - adrian@gaudebert.fr
  */
 
 var am = require('../action-manager');
+
+var newunit1 = function () {
+    return {
+        position: 1,
+        life: 100,
+        attack: 10,
+        defense: 5,
+        canMove: function () {
+            return true;
+        },
+        canReach: function (unit) {
+            return true;
+        },
+        canGoTo: function (dest) {
+            return true;
+        }
+    };
+};
+var newunit2 = function () {
+    return {
+        position: 3,
+        life: 90,
+        attack: 20,
+        defense: 15,
+        canMove: function (unit) {
+            return false;
+        },
+        canReach: function (unit) {
+            return false;
+        },
+        canGoTo: function (dest) {
+            return false;
+        }
+    };
+};
+var newcell = function () {
+    return {
+        position: 2
+    };
+};
+
 
 exports['load-actions'] = function (test) {
     // One component case
@@ -25,46 +66,16 @@ exports['load-actions'] = function (test) {
     test.equal(myGE.actions.unit.attack.actionName, 'attack');
 
     test.done();
-}
+};
 
 exports['use-actions'] = function (test) {
     // One component case
     var myGE = new am.ActionManager();
     var unitActions = require('./modules/unit/actions.js');
 
-    var unit1 = {
-        position: 1,
-        life: 100,
-        attack: 10,
-        defense: 5,
-        canMove: function () {
-            return true;
-        },
-        canReach: function (unit) {
-            return true;
-        },
-        canGoTo: function (dest) {
-            return true;
-        }
-    };
-    var unit2 = {
-        position: 3,
-        life: 90,
-        attack: 20,
-        defense: 15,
-        canMove: function (unit) {
-            return false;
-        },
-        canReach: function (unit) {
-            return false;
-        },
-        canGoTo: function (dest) {
-            return false;
-        }
-    };
-    var cell = {
-        position: 2
-    };
+    var unit1 = newunit1();
+    var unit2 = newunit2();
+    var cell = newcell();
 
     myGE.addActions('unit', unitActions.actions);
 
@@ -89,45 +100,16 @@ exports['use-actions'] = function (test) {
     test.equal(unit2.life, 80);
 
     test.done();
-}
+};
 
 exports['several-actions'] = function (test) {
     // One component case
     var myGE = new am.ActionManager();
     var unitActions = require('./modules/unit/actions.js');
-    var unit1 = {
-        position: 1,
-        life: 100,
-        attack: 10,
-        defense: 5,
-        canMove: function () {
-            return true;
-        },
-        canReach: function (unit) {
-            return true;
-        },
-        canGoTo: function (dest) {
-            return true;
-        }
-    };
-    var unit2 = {
-        position: 3,
-        life: 90,
-        attack: 20,
-        defense: 15,
-        canMove: function (unit) {
-            return false;
-        },
-        canReach: function (unit) {
-            return false;
-        },
-        canGoTo: function (dest) {
-            return false;
-        }
-    };
-    var cell = {
-        position: 2
-    };
+
+    var unit1 = newunit1();
+    var unit2 = newunit2();
+    var cell = newcell();
 
     myGE.addActions('unit', unitActions.actions);
 
@@ -141,4 +123,35 @@ exports['several-actions'] = function (test) {
     test.equal(unit1.position, cell.position);
 
     test.done();
-}
+};
+
+exports['override-execute'] = function (test) {
+    var myGE = new am.ActionManager();
+    var unitActions = require('./modules/unit/actions.js');
+
+    var unit1 = newunit1();
+    var unit2 = newunit2();
+    var cell = newcell();
+
+    var count = 0;
+    function myExecute() {
+        count += 1;
+    }
+
+    myGE.addActions('unit', unitActions.actions, myExecute);
+
+    myGE.actions.unit.move(unit1, cell);
+
+    // test the action was not executed
+    test.equal(unit1.position, 1);
+    // test the callback was called instead
+    test.equal(count, 1);
+
+    myGE.actions.unit.attack(unit1, unit2);
+
+    test.equal(unit1.life, 100);
+    test.equal(unit2.life, 90);
+    test.equal(count, 2);
+
+    test.done();
+};
