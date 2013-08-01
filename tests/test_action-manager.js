@@ -9,10 +9,10 @@
 
 var am = require('../action-manager');
 
-exports['load-actions'] = function(test) {
+exports['load-actions'] = function (test) {
     // One component case
-    var myGE = new am.ActionManager(),
-        unitActions = require('./modules/unit/actions.js');
+    var myGE = new am.ActionManager();
+    var unitActions = require('./modules/unit/actions.js');
 
     myGE.addActions('unit', unitActions.actions);
 
@@ -27,44 +27,44 @@ exports['load-actions'] = function(test) {
     test.done();
 }
 
-exports['use-actions'] = function(test) {
+exports['use-actions'] = function (test) {
     // One component case
-    var myGE = new am.ActionManager(),
-        unitActions = require('./modules/unit/actions.js'),
+    var myGE = new am.ActionManager();
+    var unitActions = require('./modules/unit/actions.js');
 
-        unit1 = {
-            "position": 1,
-            "life": 100,
-            "attack": 10,
-            "defense": 5,
-            "canMove": function() {
-                return true;
-            },
-            "canReach": function(unit) {
-                return true;
-            },
-            "canGoTo": function(dest) {
-                return true;
-            }
+    var unit1 = {
+        position: 1,
+        life: 100,
+        attack: 10,
+        defense: 5,
+        canMove: function () {
+            return true;
         },
-        unit2 = {
-            "position": 3,
-            "life": 90,
-            "attack": 20,
-            "defense": 15,
-            "canMove": function(unit) {
-                return false;
-            },
-            "canReach": function(unit) {
-                return false;
-            },
-            "canGoTo": function(dest) {
-                return false;
-            }
+        canReach: function (unit) {
+            return true;
         },
-        cell = {
-            "position": 2
-        };
+        canGoTo: function (dest) {
+            return true;
+        }
+    };
+    var unit2 = {
+        position: 3,
+        life: 90,
+        attack: 20,
+        defense: 15,
+        canMove: function (unit) {
+            return false;
+        },
+        canReach: function (unit) {
+            return false;
+        },
+        canGoTo: function (dest) {
+            return false;
+        }
+    };
+    var cell = {
+        position: 2
+    };
 
     myGE.addActions('unit', unitActions.actions);
 
@@ -91,44 +91,43 @@ exports['use-actions'] = function(test) {
     test.done();
 }
 
-exports['several-actions'] = function(test) {
+exports['several-actions'] = function (test) {
     // One component case
-    var myGE = new am.ActionManager(),
-        unitActions = require('./modules/unit/actions.js'),
-
-        unit1 = {
-            "position": 1,
-            "life": 100,
-            "attack": 10,
-            "defense": 5,
-            "canMove": function() {
-                return true;
-            },
-            "canReach": function(unit) {
-                return true;
-            },
-            "canGoTo": function(dest) {
-                return true;
-            }
+    var myGE = new am.ActionManager();
+    var unitActions = require('./modules/unit/actions.js');
+    var unit1 = {
+        position: 1,
+        life: 100,
+        attack: 10,
+        defense: 5,
+        canMove: function () {
+            return true;
         },
-        unit2 = {
-            "position": 3,
-            "life": 90,
-            "attack": 20,
-            "defense": 15,
-            "canMove": function(unit) {
-                return false;
-            },
-            "canReach": function(unit) {
-                return false;
-            },
-            "canGoTo": function(dest) {
-                return false;
-            }
+        canReach: function (unit) {
+            return true;
         },
-        cell = {
-            "position": 2
-        };
+        canGoTo: function (dest) {
+            return true;
+        }
+    };
+    var unit2 = {
+        position: 3,
+        life: 90,
+        attack: 20,
+        defense: 15,
+        canMove: function (unit) {
+            return false;
+        },
+        canReach: function (unit) {
+            return false;
+        },
+        canGoTo: function (dest) {
+            return false;
+        }
+    };
+    var cell = {
+        position: 2
+    };
 
     myGE.addActions('unit', unitActions.actions);
 
